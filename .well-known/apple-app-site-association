@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "76865ATL25.com.kizutsukanai.kizutsukanaiApp",
+        "paths": [
+          "/friend/*",
+          "/google-calendar",
+          "/google-calendar/*"
+        ]
+      }
+    ]
+  }
+}
