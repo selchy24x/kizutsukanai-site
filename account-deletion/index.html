@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#fcf8f3" />
+    <meta
+      name="description"
+      content="傷つかない招待アプリのアカウント削除手続きを、Webから開始できます。"
+    />
+    <title>アカウント削除 | 傷つかない招待アプリ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./app.js"></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="../landing/" aria-label="傷つかない招待アプリの紹介ページへ">
+        <span class="brand-mark" aria-hidden="true">
+          <img src="../images/logo_mark_alt.png" alt="" />
+        </span>
+        <span>傷つかない招待アプリ</span>
+      </a>
+    </header>
+
+    <main>
+      <section class="portal-shell" aria-labelledby="page-title">
+        <div class="portal-copy">
+          <h1 id="page-title">アカウント削除</h1>
+          <p class="lead">削除するアカウントにログインしてください。</p>
+
+          <div class="steps" aria-label="削除までの3ステップ">
+            <h2>削除までの3ステップ</h2>
+            <ol>
+              <li>
+                <span class="step-number">1</span>
+                <div><strong>ログイン</strong><p>削除するアカウントにログインします。</p></div>
+              </li>
+              <li>
+                <span class="step-number">2</span>
+                <div><strong>内容を確認</strong><p>削除されるデータと注意事項を確認します。</p></div>
+              </li>
+              <li>
+                <span class="step-number">3</span>
+                <div><strong>削除を開始</strong><p>本人確認後、アカウントの削除を開始します。</p></div>
+              </li>
+            </ol>
+          </div>
+
+          <div class="warning-panel">
+            <span class="warning-icon" aria-hidden="true">!</span>
+            <div>
+              <strong>削除は元に戻せません</strong>
+              <p>プロフィールや招待などのデータに加え、送信したチャット本文・スタンプ・画像も削除されます。</p>
+            </div>
+          </div>
+        </div>
+
+        <section class="auth-card" aria-live="polite">
+          <div id="global-message" class="message" hidden></div>
+
+          <div id="login-view" class="view">
+            <form id="email-form" novalidate>
+              <label for="email">メールアドレス</label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                inputmode="email"
+                autocomplete="email"
+                placeholder="例）you@example.com"
+                required
+              />
+              <button class="button button-primary" type="submit">確認コードを送る</button>
+            </form>
+
+            <div class="divider"><span>または</span></div>
+
+            <div class="social-buttons" aria-label="SNSログイン">
+              <button class="button button-social" type="button" data-provider="google">
+                <span class="provider-mark provider-google" aria-hidden="true">G</span>
+                Googleでログイン
+              </button>
+              <button class="button button-social" type="button" data-provider="line">
+                <span class="provider-mark provider-line" aria-hidden="true">LINE</span>
+                LINEでログイン
+              </button>
+              <button class="button button-social" type="button" data-provider="yahoo">
+                <span class="provider-mark provider-yahoo" aria-hidden="true">Y!</span>
+                Yahoo! JAPAN IDでログイン
+              </button>
+            </div>
+
+            <p class="login-note">
+              ログイン方法を覚えていない場合は、心当たりのある方法をお試しください。削除専用ページから新しいアカウントは作成されません。
+            </p>
+            <a
+              class="support-link"
+              href="https://docs.google.com/forms/d/e/1FAIpQLSdhaTQfcDpIWdSzFA9Vqvb9R7kUrXg1742PqpgoOieuz2YJrA/viewform?usp=publish-editor"
+              target="_blank"
+              rel="noreferrer"
+            >ログインできない場合はお問い合わせください<span aria-hidden="true">→</span></a>
+          </div>
+
+          <div id="otp-view" class="view" hidden>
+            <button class="back-button" type="button" data-action="back">← 戻る</button>
+            <h2>確認コードを入力</h2>
+            <p id="otp-description" class="view-description"></p>
+            <form id="otp-form" novalidate>
+              <label for="otp">確認コード</label>
+              <input
+                id="otp"
+                name="otp"
+                type="text"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                maxlength="8"
+                pattern="[0-9]*"
+                placeholder="6桁のコード"
+                required
+              />
+              <button class="button button-primary" type="submit">確認する</button>
+            </form>
+            <button id="resend-otp" class="text-button" type="button">確認コードを再送する</button>
+          </div>
+
+          <div id="confirm-view" class="view" hidden>
+            <button class="back-button" type="button" data-action="signout">← 別の方法でログイン</button>
+            <p class="section-label">削除対象のアカウント</p>
+            <div class="account-summary">
+              <span class="account-avatar" id="account-initial" aria-hidden="true">?</span>
+              <div>
+                <strong id="account-name">アカウント</strong>
+                <p id="account-email"></p>
+              </div>
+            </div>
+
+            <h2>このアカウントを削除しますか？</h2>
+            <p class="view-description">
+              この操作は取り消せません。自分以外のメンバーがいる所有サークルは、先にアプリで移譲または削除してください。
+            </p>
+            <label class="consent-row">
+              <input id="deletion-consent" type="checkbox" />
+              <span>削除される内容を確認し、元に戻せないことに同意します。</span>
+            </label>
+            <button id="verify-deletion" class="button button-danger" type="button" disabled>
+              本人確認へ進む
+            </button>
+          </div>
+
+          <div id="reauth-view" class="view" hidden>
+            <button class="back-button" type="button" data-action="confirm">← 戻る</button>
+            <h2>もう一度本人確認</h2>
+            <p id="reauth-description" class="view-description"></p>
+            <button id="reauth-social" class="button button-primary" type="button" hidden></button>
+            <button id="start-deletion" class="button button-danger" type="button" hidden>削除する</button>
+          </div>
+
+          <div id="blocker-view" class="view" hidden>
+            <h2>先にサークルを整理してください</h2>
+            <p class="view-description">次のサークルを別のメンバーへ移譲するか、サークルを削除してからもう一度お試しください。</p>
+            <ul id="blocker-list" class="blocker-list"></ul>
+            <a class="button button-primary button-link" href="../landing/">アプリに戻って対応する</a>
+            <button class="text-button" type="button" data-action="retry">対応済みとして再確認する</button>
+          </div>
+
+          <div id="progress-view" class="view progress-view" hidden>
+            <span class="spinner" aria-hidden="true"></span>
+            <h2 id="progress-title">削除を開始しています…</h2>
+            <p id="progress-description" class="view-description">このページを閉じずにお待ちください。</p>
+          </div>
+
+          <div id="complete-view" class="view complete-view" hidden>
+            <span class="complete-mark" aria-hidden="true">✓</span>
+            <h2>アカウントを削除しました</h2>
+            <p class="view-description">削除処理が完了しました。ご利用ありがとうございました。</p>
+            <a class="button button-primary button-link" href="../landing/">紹介ページへ戻る</a>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <footer>
+      <nav aria-label="法的情報">
+        <a href="../privacy-policy.html">プライバシーポリシー</a>
+        <span aria-hidden="true">|</span>
+        <a href="../terms.html">利用規約</a>
+      </nav>
+      <p>© 傷つかない招待アプリ</p>
+    </footer>
+
+    <noscript>このページから削除手続きを行うにはJavaScriptを有効にしてください。</noscript>
+  </body>
+</html>
