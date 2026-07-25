@@ -158,12 +158,54 @@ async function beginSocialLogin(provider, { reauthentication = false } = {}) {
   const body = provider === "google"
     ? {}
     : { provider, app_redirect_to: PAGE_URL, deletion_only: true };
-  const { data, error } = await supabase.functions.invoke(functionName, { body });
-  if (error || !data?.authorization_url) {
-    return showMessage("SNSログインを開始できませんでした。時間をおいてお試しください。");
+
+  setSocialLoginBusy(provider, true);
+  try {
+    const data = await invokePublicFunction(functionName, body);
+    if (!data?.authorization_url) {
+      throw new Error("AUTHORIZATION_URL_MISSING");
+    }
+    if (reauthentication) localStorage.setItem(`${STORAGE_KEY}-pending-reauth`, "true");
+    window.location.assign(data.authorization_url);
+  } catch (error) {
+    console.error("Social login start failed", error);
+    setSocialLoginBusy(provider, false);
+    showMessage(
+      `${providerLabel(provider)}ログインを開始できませんでした。通信環境を確認して、もう一度お試しください。`,
+    );
   }
-  if (reauthentication) localStorage.setItem(`${STORAGE_KEY}-pending-reauth`, "true");
-  window.location.assign(data.authorization_url);
+}
+
+async function invokePublicFunction(functionName, body) {
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), 15000);
+  try {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/${functionName}`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_PUBLISHABLE_KEY,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      throw new Error(typeof data?.error === "string" ? data.error : `HTTP_${response.status}`);
+    }
+    return data;
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
+
+function setSocialLoginBusy(activeProvider, busy) {
+  for (const button of document.querySelectorAll("[data-provider]")) {
+    button.disabled = busy;
+    button.classList.toggle("is-loading", busy && button.dataset.provider === activeProvider);
+    if (busy && button.dataset.provider === activeProvider) button.setAttribute("aria-busy", "true");
+    else button.removeAttribute("aria-busy");
+  }
 }
 
 async function prepareDeletion({ resumeReauthentication = false } = {}) {

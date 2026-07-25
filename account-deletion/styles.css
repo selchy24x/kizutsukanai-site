@@ -445,6 +445,29 @@ input:focus {
   box-shadow: none;
 }
 
+.button-social.is-loading {
+  position: relative;
+  color: transparent;
+}
+
+.button-social.is-loading > * { visibility: hidden; }
+
+.button-social.is-loading::after {
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  border: 3px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  color: inherit;
+  content: "";
+  animation: spin 700ms linear infinite;
+}
+
+.button-google.is-loading::after { color: #5f6368; }
+.button-line.is-loading::after,
+.button-yahoo.is-loading::after { color: white; }
+
 .provider-logo { width: 20px; height: 20px; flex: 0 0 auto; }
 
 .button-google {
