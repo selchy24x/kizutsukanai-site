@@ -1,21 +1,46 @@
 import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.8/+esm";
 
-const SUPABASE_URL = "https://eewvtykkjnnfmwhhntgl.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_2mjKpNnMfugiM-7x_banfA_Q--qZmNr";
-const PAGE_URL = "https://selchy24x.github.io/kizutsukanai-site/account-deletion/";
-const STORAGE_KEY = "kizutsukanai-web-account-deletion";
+const LOCAL_HOSTNAMES = new Set(["localhost", "127.0.0.1", "::1"]);
+const DEVELOPMENT_MODE = LOCAL_HOSTNAMES.has(window.location.hostname) &&
+  new URLSearchParams(window.location.search).get("environment") === "development";
+const PRODUCTION_SUPABASE_URL = "https://eewvtykkjnnfmwhhntgl.supabase.co";
+const PRODUCTION_SUPABASE_PUBLISHABLE_KEY = "sb_publishable_2mjKpNnMfugiM-7x_banfA_Q--qZmNr";
+let SUPABASE_URL = PRODUCTION_SUPABASE_URL;
+let SUPABASE_PUBLISHABLE_KEY = PRODUCTION_SUPABASE_PUBLISHABLE_KEY;
+let supabase;
+const PAGE_URL = DEVELOPMENT_MODE
+  ? `${window.location.origin}${window.location.pathname}?environment=development`
+  : "https://selchy24x.github.io/kizutsukanai-site/account-deletion/";
+const STORAGE_KEY = DEVELOPMENT_MODE
+  ? "kizutsukanai-web-account-deletion-development"
+  : "kizutsukanai-web-account-deletion";
 const INITIAL_AUTH_HASH = new URLSearchParams(window.location.hash.slice(1));
 const ARRIVED_FROM_AUTHENTICATION = INITIAL_AUTH_HASH.has("access_token") ||
   INITIAL_AUTH_HASH.has("refresh_token");
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
-  auth: {
-    flowType: "implicit",
-    detectSessionInUrl: true,
-    persistSession: true,
-    storageKey: `${STORAGE_KEY}-auth`,
-  },
-});
+async function loadLocalDevelopmentConfig() {
+  let config;
+  try {
+    ({ default: config } = await import("./local-development-config.js"));
+  } catch {
+    throw new Error(
+      "Local development mode requires account-deletion/local-development-config.js.",
+    );
+  }
+
+  const supabaseUrl = new URL(String(config?.supabaseUrl || ""));
+  const projectRef = String(config?.projectRef || "").trim();
+  const supabasePublishableKey = String(config?.supabasePublishableKey || "").trim();
+  if (
+    supabaseUrl.protocol !== "https:" ||
+    supabaseUrl.hostname !== `${projectRef}.supabase.co` ||
+    supabaseUrl.origin === PRODUCTION_SUPABASE_URL ||
+    !supabasePublishableKey.startsWith("sb_publishable_")
+  ) {
+    throw new Error("The local development Supabase configuration is invalid.");
+  }
+  return { supabaseUrl: supabaseUrl.origin, supabasePublishableKey };
+}
 
 const state = {
   challenge: null,
@@ -31,10 +56,25 @@ const otpForm = document.querySelector("#otp-form");
 const consent = document.querySelector("#deletion-consent");
 const startDeletionButton = document.querySelector("#start-deletion-confirm");
 const warningDialog = document.querySelector("#irreversibility-dialog");
+const developmentNoticeDialog = document.querySelector("#development-notice-dialog");
 
 document.addEventListener("DOMContentLoaded", initialise);
 
 async function initialise() {
+  if (DEVELOPMENT_MODE) {
+    const localConfig = await loadLocalDevelopmentConfig();
+    SUPABASE_URL = localConfig.supabaseUrl;
+    SUPABASE_PUBLISHABLE_KEY = localConfig.supabasePublishableKey;
+  }
+  supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
+    auth: {
+      flowType: "implicit",
+      detectSessionInUrl: true,
+      persistSession: true,
+      storageKey: `${STORAGE_KEY}-auth`,
+    },
+  });
+  configureDevelopmentMode();
   bindEvents();
   showInitialWarning();
   const socialResult = consumeSocialResult();
@@ -64,6 +104,23 @@ async function initialise() {
   }
 }
 
+function configureDevelopmentMode() {
+  if (!DEVELOPMENT_MODE) return;
+  document.title = `【開発DB】${document.title}`;
+  document.querySelector('meta[name="robots"]')?.setAttribute("content", "noindex,nofollow");
+  const badge = document.querySelector(".page-badge");
+  if (badge) badge.textContent = "開発DB・ローカル専用";
+
+  for (const button of document.querySelectorAll("[data-provider]")) {
+    button.disabled = true;
+    button.title = "ローカル開発版ではメールOTPを使用してください";
+  }
+  const note = document.createElement("li");
+  note.textContent = "開発DB接続中です。ローカル検証ではメールの確認コードを使用してください。";
+  document.querySelector(".login-notes")?.prepend(note);
+  developmentNoticeDialog.showModal();
+}
+
 function bindEvents() {
   emailForm.addEventListener("submit", sendLoginOtp);
   otpForm.addEventListener("submit", verifyOtp);
@@ -82,20 +139,33 @@ function bindEvents() {
   startDeletionButton.addEventListener("click", startDeletionFromConfirmation);
   document.querySelector("#acknowledge-deletion").addEventListener("click", acknowledgeWarning);
   warningDialog.addEventListener("cancel", (event) => event.preventDefault());
+  document.querySelector("#close-development-notice").addEventListener("click", closeDevelopmentNotice);
+  developmentNoticeDialog.addEventListener("cancel", (event) => event.preventDefault());
 }
 
 function showInitialWarning() {
   const params = new URLSearchParams(window.location.search);
   const returningFromAuthentication = params.has("social_status") || Boolean(window.location.hash);
-  if (state.receipt?.statusToken || returningFromAuthentication || warningDialog.open) return;
+  if (
+    state.receipt?.statusToken ||
+    returningFromAuthentication ||
+    warningDialog.open ||
+    developmentNoticeDialog.open
+  ) return;
   warningDialog.showModal();
+}
+
+function closeDevelopmentNotice() {
+  developmentNoticeDialog.close();
+  showInitialWarning();
 }
 
 function acknowledgeWarning() {
   warningDialog.close();
-  if (!document.querySelector("#login-view").hidden) {
-    document.querySelector("#email").focus();
-  }
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  window.requestAnimationFrame(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+  });
 }
 
 async function sendLoginOtp(event) {
@@ -209,8 +279,8 @@ function setSocialLoginBusy(activeProvider, busy) {
 
 async function prepareDeletion() {
   clearMessage();
-  showView("progress-view");
-  setProgress("アカウントを確認しています…", "削除前の条件を確認しています。");
+  showView("progress-view", 2);
+  setProgress("アカウントを確認しています…", "削除前の条件を確認しています。", 2);
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -313,11 +383,20 @@ async function pollProgress() {
 }
 
 function showBlockers(blockers) {
-  const list = document.querySelector("#blocker-list");
-  list.replaceChildren(...blockers.map((blocker) => {
-    const item = document.createElement("li");
-    item.textContent = `${blocker.circle_name || "サークル"}（自分以外 ${Number(blocker.other_member_count || 0)}人）`;
-    return item;
+  const tableBody = document.querySelector("#blocker-list");
+  tableBody.replaceChildren(...blockers.map((blocker) => {
+    const row = document.createElement("tr");
+    const circleName = document.createElement("td");
+    const memberCount = document.createElement("td");
+    const otherMemberCount = Number(blocker.other_member_count || 0);
+    const totalMemberCount = Number.isFinite(otherMemberCount)
+      ? Math.max(0, otherMemberCount) + 1
+      : 1;
+
+    circleName.textContent = blocker.circle_name || "サークル";
+    memberCount.textContent = `${totalMemberCount}人`;
+    row.append(circleName, memberCount);
+    return row;
   }));
   showView("blocker-view");
 }
@@ -358,30 +437,32 @@ function consumeSocialResult() {
   };
 }
 
-function showView(id) {
+function showView(id, stepOverride) {
   for (const view of views) view.hidden = view.id !== id;
-  updateStepState(id);
+  updateStepState(id, stepOverride);
   clearMessage();
   if (id !== "login-view" && id !== "progress-view") {
     document.querySelector(".auth-card").scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
 }
 
-function updateStepState(viewId) {
-  const step = ["progress-view", "complete-view"].includes(viewId)
+function updateStepState(viewId, stepOverride) {
+  const step = stepOverride || (["progress-view", "complete-view"].includes(viewId)
     ? 3
     : ["confirm-view", "blocker-view"].includes(viewId)
       ? 2
-      : 1;
+      : 1);
   const steps = document.querySelector(".steps");
   steps.dataset.currentStep = String(step);
+  document.querySelector(".support-link").hidden = step !== 1;
   for (const [index, item] of [...steps.querySelectorAll("li")].entries()) {
     if (index + 1 === step) item.setAttribute("aria-current", "step");
     else item.removeAttribute("aria-current");
   }
 }
 
-function setProgress(title, description) {
+function setProgress(title, description, step = 3) {
+  document.querySelector("#progress-view .step-kicker").textContent = `STEP ${step} / 3`;
   document.querySelector("#progress-title").textContent = title;
   document.querySelector("#progress-description").textContent = description;
 }

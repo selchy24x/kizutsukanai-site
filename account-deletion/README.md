@@ -36,3 +36,31 @@ are always shown; there is no second login after the confirmation step.
 - A successful web login creates a ten-minute deletion verification record.
 - The durable deletion status token is stored before the start request so a
   reload cannot strand the user outside the progress view.
+
+## Local development-DB mode
+
+For destructive verification, serve this repository locally and open:
+
+`http://127.0.0.1:4173/account-deletion/?environment=development`
+
+This mode is enabled only on `localhost`, `127.0.0.1`, or `::1`. Its Supabase
+URL and publishable key are read from the intentionally untracked
+`account-deletion/local-development-config.js`; development credentials and
+project identifiers are therefore absent from the published GitHub Pages
+artifact. The local file must export a default object containing
+`projectRef`, `supabaseUrl`, and `supabasePublishableKey`.
+
+Development mode uses a separate browser storage namespace and changes the
+page to `noindex,nofollow`. Social login is disabled because its callbacks
+target the published page; use the email OTP flow with development dummy
+accounts instead. The service-role key is never loaded by the browser page.
+
+## UI refinement completion
+
+The account-deletion UI refinement subproject was completed on 2026-07-26.
+The final pass covers step-state accuracy, initial scroll behavior, social
+login alignment and icons, support-link presentation, development-only safety
+messaging, blocker-table readability, confirmation copy, and responsive step
+layout. Release checks must confirm that the production hostname uses only the
+production Supabase constants and that the untracked local development config
+is not present in the commit or GitHub Pages artifact.
