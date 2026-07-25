@@ -17,8 +17,8 @@
       href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="./styles.css?v=20260726-social-auth" />
-    <script type="module" src="./app.js?v=20260726-social-auth"></script>
+    <link rel="stylesheet" href="./styles.css?v=20260726-ui-fixes-13" />
+    <script type="module" src="./app.js?v=20260726-ui-final-2"></script>
   </head>
   <body>
     <header class="site-header">
@@ -30,6 +30,32 @@
       </a>
       <span class="page-badge">アカウント削除の専用ページ</span>
     </header>
+
+    <dialog
+      id="development-notice-dialog"
+      class="warning-dialog development-notice-dialog"
+      aria-labelledby="development-notice-title"
+      aria-describedby="development-notice-description"
+    >
+      <button
+        id="close-development-notice"
+        class="dialog-close-button"
+        type="button"
+        aria-label="開発・検証用ページの注意を閉じる"
+      >×</button>
+      <p id="development-notice-title" class="development-notice-title">
+        <strong>これは開発・検証用</strong><span>のページです。</span>
+      </p>
+      <p id="development-notice-description" class="development-notice-description">
+        これがあなたに見えているということは、<strong>誤って一般公開されてしまった可能性が非常に高い</strong>です。以下の<span>お問い合わせフォームから運営に連絡</span>していただけると助かります。
+      </p>
+      <a
+        class="development-contact-link"
+        href="https://docs.google.com/forms/d/e/1FAIpQLSdhaTQfcDpIWdSzFA9Vqvb9R7kUrXg1742PqpgoOieuz2YJrA/viewform?usp=publish-editor"
+        target="_blank"
+        rel="noreferrer"
+      >お問い合わせフォームを開く</a>
+    </dialog>
 
     <dialog
       id="irreversibility-dialog"
@@ -91,7 +117,7 @@
           <div id="login-view" class="view">
             <p class="step-kicker">STEP 1 / 3</p>
             <h2>ログインして続ける</h2>
-            <p class="view-description login-description">削除するアカウントのログイン方法を選んでください。</p>
+            <p class="view-description login-description">削除するアカウントにログインしてください</p>
             <form id="email-form" novalidate>
               <label for="email">メールアドレス</label>
               <input
@@ -110,25 +136,30 @@
 
             <div class="social-buttons" aria-label="SNSログイン">
               <button class="button button-social button-google" type="button" data-provider="google">
-                <svg class="provider-logo provider-google" viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.2-2.2H12v4.2h6.6c-.1 1.1-.8 2.8-2.4 3.9l3.6 2.8c2.2-2 3.7-5 3.7-8.7z" />
-                  <path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.8-2.9l-3.6-2.8c-1 .7-2.4 1.2-4.2 1.2-3.2 0-5.9-2.1-6.9-5l-3.7 2.9C3.3 21.3 7.3 24 12 24z" />
-                  <path fill="#FBBC05" d="M5.1 14.5c-.3-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.4 6.6C.5 8.2 0 10 0 12s.5 3.8 1.4 5.4l3.7-2.9z" />
-                  <path fill="#EA4335" d="M12 4.7c2.3 0 3.8.9 4.7 1.8l3.2-3.1C17.9 1.5 15.2 0 12 0 7.3 0 3.3 2.7 1.4 6.6l3.7 2.9c1-2.9 3.7-4.8 6.9-4.8z" />
-                </svg>
+                <span class="provider-logo-box" aria-hidden="true">
+                  <svg class="provider-logo provider-google" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.2-2.2H12v4.2h6.6c-.1 1.1-.8 2.8-2.4 3.9l3.6 2.8c2.2-2 3.7-5 3.7-8.7z" />
+                    <path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.8-2.9l-3.6-2.8c-1 .7-2.4 1.2-4.2 1.2-3.2 0-5.9-2.1-6.9-5l-3.7 2.9C3.3 21.3 7.3 24 12 24z" />
+                    <path fill="#FBBC05" d="M5.1 14.5c-.3-.8-.4-1.6-.4-2.5s.2-1.7.4-2.5L1.4 6.6C.5 8.2 0 10 0 12s.5 3.8 1.4 5.4l3.7-2.9z" />
+                    <path fill="#EA4335" d="M12 4.7c2.3 0 3.8.9 4.7 1.8l3.2-3.1C17.9 1.5 15.2 0 12 0 7.3 0 3.3 2.7 1.4 6.6l3.7 2.9c1-2.9 3.7-4.8 6.9-4.8z" />
+                  </svg>
+                </span>
                 <span>Googleでログイン</span>
               </button>
               <button class="button button-social button-line" type="button" data-provider="line">
                 <span class="provider-logo-box" aria-hidden="true">
-                  <svg class="provider-logo provider-line" viewBox="0 0 32 32">
-                    <path fill="#fff" d="M27.8 14.2c0-5.5-5.3-10-11.8-10S4.2 8.7 4.2 14.2c0 4.9 4.2 9 9.9 9.8.4.1.9.3 1 .7.1.3.1.8 0 1.1l-.2 1.4c-.1.4-.3 1.7 1.5.9 1.8-.8 9.7-5.7 11.4-9.8.7-1.5 1-2.8 1-4.1Z" />
-                    <text x="16" y="17.1" fill="#06c755" font-family="Arial, sans-serif" font-size="6.2" font-weight="700" text-anchor="middle">LINE</text>
-                  </svg>
+                  <img
+                    class="provider-logo provider-line"
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAD/0lEQVR4nO2aT4hVVRzHP2eyZrTJGacikxJsM2CQ0iIkyOyfFLiQVo5EuGgXQolh1EKFsJUw/YEoWogFBS4i2kQqkmVFQTkQFIYYUw2WaabJwEB+Wtz7YLq9e+fcN++9+6r72Tzeub9zzu/7u+fe8zvnXKipqampqampqfl/EjrdgboQuBO4A7gdWAEsB4aAq1KzGeB3YBI4BXwJfA58EkKY7rSPbUftVzer76nTts502sZmtb9qXXOiLlF3qefmITqPc2nbS6rW+Q/UBep29WIHhGe5mPa1oGrdAKgr1YkuCM8yoa6sWvyYeqkC8Q0uqWNVid9WofAs27otfmvVipuwtVviN6iXq1bbhMvqhrJ6SiVC6s3ABNB7U1HCb8CqEMIPsRX6SnYwTu+Kh8S38TIVokeAuhb4sKxHFXF3COFojGGZEbCjRWeqINrXqBGQPvuTLbtTDctj3gWx6eTGgmtHgBeBfuAN4MomNnuBj4HrgddIVnrPk6wGX07LGzSuDQD7gVeBwzl9ryH/bm8EXirwOx71QMH0Mz7L7nyOzbr0+nD6f9+sOuv9+7S6L9NebvDVdQV+HYjRFjsCVkfalSaE8IG6B3i2yE4dAu7JFK8pqBLlc2wAlkXatcpO4C5gbYHNCuCdEm1G+RwbgEUlOi6FujiEcMFkUXO8wPQn4MlM2SpgS459lM+xAZDObZ+9rm4KIUypjwCbmhmFEM6QSXLSd8uW+XQeG4CzwHXz6aiA9cAzwHPp+2CqmZHJ3uJoprjoOf81pvPYAJygcwEA2K0eCyEcCSF8nWMzCnxVos0TMUaxAfiCZGd3Ll4BFs76fzXwWES9PuAtdXUI4XSOzRnghUzZKPBgjv2nEf3GoT4Ukwfk1J0rD5idOxxWr8hcazUPuC9GW+wIOAT8DNzQ5Nq16nBOvcH0d1lq05iaRtL/AyQZZIN7gV3qXpKR1A8sLWh/aU75JEmG2j7UnQXR7jWeiNVVZjk8DJwERloJYBc5Bdwae6IUvRwOIZwHtrfqVRd5vGPHaWpQ3614eBdRevVXOrtTF5MsWbNJSdUcBR4IIcyUqVR2T5AQwgXgfpL3Qa/wLfBwWfHQQgAAQgg/kqzcJlqp32ZOktz5s13vWb1GfbPCZ/4b9aauC28SiDH1dJfFf6T2zpSsDql71D+6IP5tdaBqzU1RR0zO77/rgPA/1afUjn/a0xbU20xS6EPO/xj9FyMXOD2J2qfeYvK9z8GS4g+qN1atoW2YZJSfRQifUXeoLU3XPY26fw7xx9WObcdXjvp+wV3frTY7YfrvoH7fRPwxq/7wqRuoizLCp9RH/bdMb/NFHTTZ75tUn1YH565VU1NTU1NTU1NT007+AvbB4rXEhFfKAAAAAElFTkSuQmCC"
+                    alt=""
+                  />
                 </span>
                 <span>LINEでログイン</span>
               </button>
               <button class="button button-social button-yahoo" type="button" data-provider="yahoo">
-                <span class="provider-logo provider-yahoo" aria-hidden="true">Y!</span>
+                <span class="provider-logo-box" aria-hidden="true">
+                  <span class="provider-logo provider-yahoo">Y!</span>
+                </span>
                 <span>Yahoo! JAPAN IDでログイン</span>
               </button>
             </div>
@@ -176,7 +207,7 @@
 
             <h2>このアカウントを削除しますか？</h2>
             <p class="view-description">
-              この操作は取り消せません。自分以外のメンバーがいる所有サークルは、先にアプリで移譲または削除してください。
+              ⚠️この操作は取り消せません
             </p>
             <label class="consent-row">
               <input id="deletion-consent" type="checkbox" />
@@ -190,8 +221,16 @@
           <div id="blocker-view" class="view" hidden>
             <p class="step-kicker">STEP 2 / 3</p>
             <h2>先にサークルを整理してください</h2>
-            <p class="view-description">次のサークルを別のメンバーへ移譲するか、サークルを削除してからもう一度お試しください。</p>
-            <ul id="blocker-list" class="blocker-list"></ul>
+            <p class="view-description">以下のサークルについて、オーナー権限を別のメンバーへ移譲するか、サークルを削除してからもう一度お試しください。</p>
+            <table class="blocker-table">
+              <thead>
+                <tr>
+                  <th scope="col">サークル名</th>
+                  <th scope="col">メンバー数</th>
+                </tr>
+              </thead>
+              <tbody id="blocker-list"></tbody>
+            </table>
             <a class="button button-primary button-link" href="../landing/">アプリに戻って対応する</a>
             <button class="text-button" type="button" data-action="retry">対応済みとして再確認する</button>
           </div>
@@ -208,7 +247,7 @@
             <span class="complete-mark" aria-hidden="true">✓</span>
             <h2>アカウントを削除しました</h2>
             <p class="view-description">削除処理が完了しました。ご利用ありがとうございました。</p>
-            <a class="button button-primary button-link" href="../landing/">紹介ページへ戻る</a>
+            <a class="button button-primary button-link" href="../landing/">アプリの紹介ページに移動する</a>
           </div>
         </section>
 
@@ -217,7 +256,14 @@
           href="https://docs.google.com/forms/d/e/1FAIpQLSdhaTQfcDpIWdSzFA9Vqvb9R7kUrXg1742PqpgoOieuz2YJrA/viewform?usp=publish-editor"
           target="_blank"
           rel="noreferrer"
-        >ログインできない場合はお問い合わせください<span aria-hidden="true">→</span></a>
+        ><span class="support-link-text">ログインできない場合はお問い合わせください</span>
+          <!-- Lucide SquareArrowOutUpRight icon, available under the ISC License. -->
+          <svg class="support-link-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M14 4h6v6" />
+            <path d="M20 4 11 13" />
+            <path d="M17 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5" />
+          </svg>
+        </a>
       </section>
     </main>
 
