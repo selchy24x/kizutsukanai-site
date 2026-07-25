@@ -8,9 +8,10 @@ This directory is a framework-free GitHub Pages application. It uses the
 production Supabase publishable key; privileged operations stay in Edge
 Functions.
 
-## Required backend release
+## Backend release status
 
-Deploy the matching `kizutsukanai_app` changes before publishing this page:
+The matching `kizutsukanai_app` backend was deployed to production on
+2026-07-26. It includes:
 
 - migration `add_web_account_deletion_auth`
 - `web-account-deletion-google-start`
@@ -18,9 +19,13 @@ Deploy the matching `kizutsukanai_app` changes before publishing this page:
 - updated `social-auth-start` / `social-auth-callback`
 - updated account-deletion challenge and start functions
 
-Add the public page URL to the Supabase Auth redirect allow list. The existing
+The public page URL is registered in the Supabase Auth redirect allow list. The existing
 Google OAuth callback URI remains unchanged because the deletion-only Google
 flow reuses `google-oauth-callback` and distinguishes its server-side state.
+
+The portal deliberately starts at STEP 1 on each new visit unless a durable
+deletion status token is present. Email OTP, Google, LINE, and Yahoo! JAPAN ID
+are always shown; there is no second login after the confirmation step.
 
 ## Safety properties
 
