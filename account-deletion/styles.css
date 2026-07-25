@@ -86,6 +86,54 @@ h1, h2, p { margin-top: 0; }
 
 main { min-height: calc(100vh - 214px); }
 
+.warning-dialog {
+  width: min(520px, calc(100% - 32px));
+  max-width: none;
+  margin: auto;
+  padding: 40px;
+  overflow: visible;
+  border: 1px solid #f2cdbb;
+  border-radius: 28px;
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: 0 24px 72px rgba(35, 37, 56, 0.22);
+  text-align: center;
+}
+
+.warning-dialog::backdrop {
+  background: rgba(35, 37, 56, 0.52);
+  backdrop-filter: blur(4px);
+}
+
+.warning-dialog-icon {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  color: white;
+  background: var(--danger);
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.warning-dialog h2 {
+  margin-bottom: 14px;
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1.45;
+}
+
+.warning-dialog p {
+  margin: 0;
+  color: #6b6455;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.warning-dialog .button-primary { margin-top: 28px; }
+
 .portal-shell {
   width: min(1000px, calc(100% - 48px));
   margin: 0 auto;
@@ -618,6 +666,11 @@ footer p { margin: 10px 0 0; }
   .brand { gap: 10px; font-size: 15px; }
   .brand-mark { width: 40px; height: 40px; border-radius: 13px; }
   .page-badge { display: none; }
+
+  .warning-dialog { padding: 32px 22px; border-radius: 24px; }
+  .warning-dialog-icon { width: 48px; height: 48px; margin-bottom: 18px; border-radius: 14px; }
+  .warning-dialog h2 { font-size: 22px; }
+  .warning-dialog p { font-size: 14px; }
 
   .portal-shell { width: min(100% - 32px, 620px); padding: 48px 0 64px; }
   .page-intro { margin-bottom: 40px; }

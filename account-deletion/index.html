@@ -31,6 +31,22 @@
       <span class="page-badge">アカウント削除の専用ページ</span>
     </header>
 
+    <dialog
+      id="irreversibility-dialog"
+      class="warning-dialog"
+      aria-labelledby="warning-dialog-title"
+      aria-describedby="warning-dialog-description"
+    >
+      <span class="warning-dialog-icon" aria-hidden="true">!</span>
+      <h2 id="warning-dialog-title">削除は元に戻せません</h2>
+      <p id="warning-dialog-description">
+        削除を開始すると、アカウントと対象データは二度と復元できません。内容を確認してから手続きを進めてください。
+      </p>
+      <button id="acknowledge-deletion" class="button button-primary" type="button">
+        理解しました
+      </button>
+    </dialog>
+
     <main>
       <section class="portal-shell" aria-labelledby="page-title">
         <div class="page-intro">

@@ -28,11 +28,13 @@ const emailForm = document.querySelector("#email-form");
 const otpForm = document.querySelector("#otp-form");
 const consent = document.querySelector("#deletion-consent");
 const verifyDeletionButton = document.querySelector("#verify-deletion");
+const warningDialog = document.querySelector("#irreversibility-dialog");
 
 document.addEventListener("DOMContentLoaded", initialise);
 
 async function initialise() {
   bindEvents();
+  showInitialWarning();
   const socialResult = consumeSocialResult();
 
   if (state.receipt?.statusToken) {
@@ -73,6 +75,22 @@ function bindEvents() {
   verifyDeletionButton.addEventListener("click", beginDeletionVerification);
   document.querySelector("#reauth-social").addEventListener("click", beginSocialReauthentication);
   document.querySelector("#start-deletion").addEventListener("click", startDeletion);
+  document.querySelector("#acknowledge-deletion").addEventListener("click", acknowledgeWarning);
+  warningDialog.addEventListener("cancel", (event) => event.preventDefault());
+}
+
+function showInitialWarning() {
+  const params = new URLSearchParams(window.location.search);
+  const returningFromAuthentication = params.has("social_status") || Boolean(window.location.hash);
+  if (state.receipt?.statusToken || returningFromAuthentication || warningDialog.open) return;
+  warningDialog.showModal();
+}
+
+function acknowledgeWarning() {
+  warningDialog.close();
+  if (!document.querySelector("#login-view").hidden) {
+    document.querySelector("#email").focus();
+  }
 }
 
 async function sendLoginOtp(event) {
