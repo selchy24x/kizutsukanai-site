@@ -336,9 +336,24 @@ function consumeSocialResult() {
 
 function showView(id) {
   for (const view of views) view.hidden = view.id !== id;
+  updateStepState(id);
   clearMessage();
   if (id !== "login-view" && id !== "progress-view") {
     document.querySelector(".auth-card").scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+}
+
+function updateStepState(viewId) {
+  const step = ["progress-view", "complete-view"].includes(viewId)
+    ? 3
+    : ["confirm-view", "reauth-view", "blocker-view"].includes(viewId)
+      ? 2
+      : 1;
+  const steps = document.querySelector(".steps");
+  steps.dataset.currentStep = String(step);
+  for (const [index, item] of [...steps.querySelectorAll("li")].entries()) {
+    if (index + 1 === step) item.setAttribute("aria-current", "step");
+    else item.removeAttribute("aria-current");
   }
 }
 
