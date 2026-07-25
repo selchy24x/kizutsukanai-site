@@ -134,6 +134,11 @@ main { min-height: calc(100vh - 214px); }
 
 .warning-dialog .button-primary { margin-top: 28px; }
 
+.warning-dialog .button-primary:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 .portal-shell {
   width: min(1000px, calc(100% - 48px));
   margin: 0 auto;
@@ -165,7 +170,7 @@ h1 {
 
 .warning-panel {
   max-width: 620px;
-  margin: 32px auto 0;
+  margin: 48px auto 0;
   padding: 22px 26px;
   display: flex;
   gap: 18px;
@@ -676,7 +681,7 @@ footer p { margin: 10px 0 0; }
   .page-intro { margin-bottom: 40px; }
   .eyebrow { margin-bottom: 14px; font-size: 11px; }
   h1 { margin-bottom: 20px; font-size: clamp(2.55rem, 13vw, 3.6rem); }
-  .warning-panel { margin-top: 26px; padding: 18px; gap: 14px; border-radius: 18px; }
+  .warning-panel { margin-top: 38px; padding: 18px; gap: 14px; border-radius: 18px; }
   .warning-icon { width: 36px; height: 36px; border-radius: 10px; font-size: 20px; }
   .warning-panel strong { font-size: 16px; }
   .warning-panel p { font-size: 13.5px; }
