@@ -182,18 +182,9 @@
               <input id="deletion-consent" type="checkbox" />
               <span>削除される内容を確認し、元に戻せないことに同意します。</span>
             </label>
-            <button id="verify-deletion" class="button button-danger" type="button" disabled>
-              本人確認へ進む
+            <button id="start-deletion-confirm" class="button button-danger" type="button" disabled>
+              削除する
             </button>
-          </div>
-
-          <div id="reauth-view" class="view" hidden>
-            <button class="back-button" type="button" data-action="confirm">← 戻る</button>
-            <p class="step-kicker">STEP 2 / 3</p>
-            <h2>もう一度本人確認</h2>
-            <p id="reauth-description" class="view-description"></p>
-            <button id="reauth-social" class="button button-primary" type="button" hidden></button>
-            <button id="start-deletion" class="button button-danger" type="button" hidden>削除する</button>
           </div>
 
           <div id="blocker-view" class="view" hidden>

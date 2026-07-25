@@ -17,7 +17,6 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
 const state = {
   challenge: null,
   email: "",
-  otpPurpose: "login",
   receipt: readJson(`${STORAGE_KEY}-receipt`),
   pollingTimer: null,
 };
@@ -27,7 +26,7 @@ const message = document.querySelector("#global-message");
 const emailForm = document.querySelector("#email-form");
 const otpForm = document.querySelector("#otp-form");
 const consent = document.querySelector("#deletion-consent");
-const verifyDeletionButton = document.querySelector("#verify-deletion");
+const startDeletionButton = document.querySelector("#start-deletion-confirm");
 const warningDialog = document.querySelector("#irreversibility-dialog");
 
 document.addEventListener("DOMContentLoaded", initialise);
@@ -49,7 +48,7 @@ async function initialise() {
     if (window.location.search || window.location.hash) {
       window.history.replaceState({}, "", window.location.pathname);
     }
-    await prepareDeletion({ resumeReauthentication: socialResult.resumeReauthentication });
+    await prepareDeletion();
     if (socialResult.message) showMessage(socialResult.message);
   } else {
     showView("login-view");
@@ -70,11 +69,9 @@ function bindEvents() {
   }
 
   consent.addEventListener("change", () => {
-    verifyDeletionButton.disabled = !consent.checked;
+    startDeletionButton.disabled = !consent.checked;
   });
-  verifyDeletionButton.addEventListener("click", beginDeletionVerification);
-  document.querySelector("#reauth-social").addEventListener("click", beginSocialReauthentication);
-  document.querySelector("#start-deletion").addEventListener("click", startDeletion);
+  startDeletionButton.addEventListener("click", startDeletionFromConfirmation);
   document.querySelector("#acknowledge-deletion").addEventListener("click", acknowledgeWarning);
   warningDialog.addEventListener("cancel", (event) => event.preventDefault());
 }
@@ -110,7 +107,6 @@ async function sendLoginOtp(event) {
   if (error) return showMessage(normalizeAuthError(error));
 
   state.email = email;
-  state.otpPurpose = "login";
   document.querySelector("#otp-description").textContent = `${maskEmail(email)} に届いた確認コードを入力してください。`;
   showView("otp-view");
 }
@@ -131,16 +127,12 @@ async function verifyOtp(event) {
   if (error) return showMessage("確認コードが正しくないか、有効期限が切れています。");
 
   document.querySelector("#otp").value = "";
-  if (state.otpPurpose === "login") {
-    await prepareDeletion();
-  } else {
-    showDeletionReady();
-  }
+  await prepareDeletion();
 }
 
 async function resendOtp() {
   clearMessage();
-  const email = state.otpPurpose === "deletion" ? state.challenge?.email : state.email;
+  const email = state.email;
   if (!email) return showMessage("送信先を確認できませんでした。最初からやり直してください。");
   const { error } = await supabase.auth.signInWithOtp({
     email,
@@ -150,7 +142,7 @@ async function resendOtp() {
   showMessage("確認コードを再送しました。", "success");
 }
 
-async function beginSocialLogin(provider, { reauthentication = false } = {}) {
+async function beginSocialLogin(provider) {
   clearMessage();
   const functionName = provider === "google"
     ? "web-account-deletion-google-start"
@@ -165,7 +157,6 @@ async function beginSocialLogin(provider, { reauthentication = false } = {}) {
     if (!data?.authorization_url) {
       throw new Error("AUTHORIZATION_URL_MISSING");
     }
-    if (reauthentication) localStorage.setItem(`${STORAGE_KEY}-pending-reauth`, "true");
     window.location.assign(data.authorization_url);
   } catch (error) {
     console.error("Social login start failed", error);
@@ -208,7 +199,7 @@ function setSocialLoginBusy(activeProvider, busy) {
   }
 }
 
-async function prepareDeletion({ resumeReauthentication = false } = {}) {
+async function prepareDeletion() {
   clearMessage();
   showView("progress-view");
   setProgress("アカウントを確認しています…", "削除前の条件を確認しています。");
@@ -239,61 +230,26 @@ async function prepareDeletion({ resumeReauthentication = false } = {}) {
   };
   writeJson(`${STORAGE_KEY}-challenge`, state.challenge);
 
+  if (!state.challenge.verificationSatisfied) {
+    return failToLogin("安全のため、削除するアカウントにもう一度ログインしてください。");
+  }
+
   const name = profile?.display_name?.trim() || "名称未設定のアカウント";
   const accountEmail = profile?.email?.endsWith("@social-auth.invalid") ? "SNSログインのアカウント" : profile?.email || "";
   document.querySelector("#account-name").textContent = name;
   document.querySelector("#account-email").textContent = accountEmail;
   document.querySelector("#account-initial").textContent = [...name][0] || "?";
   consent.checked = false;
-  verifyDeletionButton.disabled = true;
-  if (resumeReauthentication && state.challenge.verificationSatisfied) {
-    showDeletionReady();
-    return;
-  }
+  startDeletionButton.disabled = true;
   showView("confirm-view");
 }
 
-async function beginDeletionVerification() {
+async function startDeletionFromConfirmation() {
   if (!state.challenge || !consent.checked) return;
-  clearMessage();
-  if (state.challenge.verificationSatisfied) {
-    showDeletionReady();
-    return;
+  if (!state.challenge.verificationSatisfied) {
+    return failToLogin("安全のため、削除するアカウントにもう一度ログインしてください。");
   }
-  if (state.challenge.method === "email_otp") {
-    state.email = state.challenge.email;
-    state.otpPurpose = "deletion";
-    const { error } = await supabase.auth.signInWithOtp({
-      email: state.email,
-      options: { shouldCreateUser: false },
-    });
-    if (error) return showMessage(normalizeAuthError(error));
-    document.querySelector("#otp-description").textContent = `${state.challenge.maskedEmail || maskEmail(state.email)} に届いた確認コードを入力してください。`;
-    showView("otp-view");
-    return;
-  }
-
-  const provider = state.challenge.provider;
-  document.querySelector("#reauth-description").textContent = `${providerLabel(provider)}でもう一度ログインし、削除するアカウントの本人確認を行ってください。`;
-  const button = document.querySelector("#reauth-social");
-  button.textContent = `${providerLabel(provider)}で再認証`;
-  button.hidden = false;
-  document.querySelector("#start-deletion").hidden = true;
-  showView("reauth-view");
-}
-
-async function beginSocialReauthentication() {
-  const provider = state.challenge?.provider;
-  if (!provider) return showMessage("再認証方法を確認できませんでした。");
-  localStorage.setItem(`${STORAGE_KEY}-pending-reauth`, "true");
-  await beginSocialLogin(provider, { reauthentication: true });
-}
-
-function showDeletionReady() {
-  document.querySelector("#reauth-description").textContent = "本人確認が完了しました。「削除する」を押すと削除処理を開始します。";
-  document.querySelector("#reauth-social").hidden = true;
-  document.querySelector("#start-deletion").hidden = false;
-  showView("reauth-view");
+  await startDeletion();
 }
 
 async function startDeletion() {
@@ -316,8 +272,11 @@ async function startDeletion() {
   if (error) {
     clearReceipt();
     if (functionStatus(error) === 409) return await prepareDeletion();
-    showView("reauth-view");
-    return showMessage("削除を開始できませんでした。本人確認をやり直してください。");
+    if ([401, 403, 410].includes(functionStatus(error))) {
+      return failToLogin("本人確認の有効期限が切れました。もう一度ログインしてください。");
+    }
+    showView("confirm-view");
+    return showMessage("削除を開始できませんでした。時間をおいて、もう一度お試しください。");
   }
 
   state.receipt.requestId = data?.request_id || state.challenge.id;
@@ -358,7 +317,6 @@ function showBlockers(blockers) {
 async function handleAction(action) {
   clearMessage();
   if (action === "back") return showView("login-view");
-  if (action === "confirm") return showView("confirm-view");
   if (action === "retry") return await prepareDeletion();
   if (action === "signout") return await failToLogin();
 }
@@ -374,8 +332,6 @@ async function failToLogin(errorMessage = "") {
 function consumeSocialResult() {
   const params = new URLSearchParams(window.location.search);
   const status = params.get("social_status");
-  const pendingReauthentication = localStorage.getItem(`${STORAGE_KEY}-pending-reauth`) === "true";
-  localStorage.removeItem(`${STORAGE_KEY}-pending-reauth`);
 
   let resultMessage = "";
   if (status === "error") {
@@ -388,10 +344,7 @@ function consumeSocialResult() {
     window.history.replaceState({}, "", window.location.pathname + window.location.hash);
   }
 
-  return {
-    message: resultMessage,
-    resumeReauthentication: pendingReauthentication && !resultMessage,
-  };
+  return { message: resultMessage };
 }
 
 function showView(id) {
@@ -406,7 +359,7 @@ function showView(id) {
 function updateStepState(viewId) {
   const step = ["progress-view", "complete-view"].includes(viewId)
     ? 3
-    : ["confirm-view", "reauth-view", "blocker-view"].includes(viewId)
+    : ["confirm-view", "blocker-view"].includes(viewId)
       ? 2
       : 1;
   const steps = document.querySelector(".steps");
