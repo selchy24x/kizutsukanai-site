@@ -4,6 +4,9 @@ const SUPABASE_URL = "https://eewvtykkjnnfmwhhntgl.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_2mjKpNnMfugiM-7x_banfA_Q--qZmNr";
 const PAGE_URL = "https://selchy24x.github.io/kizutsukanai-site/account-deletion/";
 const STORAGE_KEY = "kizutsukanai-web-account-deletion";
+const INITIAL_AUTH_HASH = new URLSearchParams(window.location.hash.slice(1));
+const ARRIVED_FROM_AUTHENTICATION = INITIAL_AUTH_HASH.has("access_token") ||
+  INITIAL_AUTH_HASH.has("refresh_token");
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
@@ -44,13 +47,18 @@ async function initialise() {
   }
 
   const { data } = await supabase.auth.getSession();
-  if (data.session) {
+  if (data.session && socialResult.freshAuthentication) {
     if (window.location.search || window.location.hash) {
       window.history.replaceState({}, "", window.location.pathname);
     }
     await prepareDeletion();
     if (socialResult.message) showMessage(socialResult.message);
   } else {
+    if (data.session) {
+      await supabase.auth.signOut({ scope: "local" }).catch(() => {});
+      state.challenge = null;
+      localStorage.removeItem(`${STORAGE_KEY}-challenge`);
+    }
     showView("login-view");
     if (socialResult.message) showMessage(socialResult.message);
   }
@@ -344,7 +352,10 @@ function consumeSocialResult() {
     window.history.replaceState({}, "", window.location.pathname + window.location.hash);
   }
 
-  return { message: resultMessage };
+  return {
+    message: resultMessage,
+    freshAuthentication: status === "success" || ARRIVED_FROM_AUTHENTICATION,
+  };
 }
 
 function showView(id) {
