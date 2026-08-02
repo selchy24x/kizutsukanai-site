@@ -138,9 +138,9 @@
 <body>
   <main>
     <article class="shell">
-      <a class="toplink" href="/kizutsukanai-site/legal-documents.html">← 一覧へ戻る</a>
+      <a class="toplink" href="./legal-documents.html">← 一覧へ戻る</a>
       <h1>傷つかない招待アプリ プライバシーポリシー</h1>
-      <div class="updated">最終更新日: 2026-07-26</div>
+      <div class="updated">最終更新日: 2026-08-02</div>
       <section class="content">
       <p>Selchy（以下「運営者」といいます。）は、運営者が提供する「傷つかない招待アプリ」およびこれに関連する一切のサービス（以下「本サービス」といいます。）におけるユーザー情報の取扱いについて、以下のとおりプライバシーポリシー（以下「本ポリシー」といいます。）を定めます。</p>
       <div class="spacer"></div>
@@ -230,6 +230,14 @@
       <div class="bullet"><div>通知設定</div></div>
       <div class="bullet"><div>アプリ内通知の内容、既読情報、配信予定時刻、配信状態</div></div>
       <div class="spacer"></div>
+      <h3>5-2. 安全機能、通報およびブロックに関する情報</h3>
+      <div class="spacer"></div>
+      <div class="bullet"><div>連絡ルームにおける通報の受付番号、通報者、対象者、対象ルーム、理由、補足、受付・確認・対応時刻および対応結果</div></div>
+      <div class="bullet"><div>通報者が明示的に選択して送信した最大20件のメッセージの復号済みコピー、添付画像の小さなプレビューおよび添付ファイルのメタデータ</div></div>
+      <div class="bullet"><div>通報時のアプリ・通信方式等の最小限の技術情報、証拠のハッシュ値および運用監査記録</div></div>
+      <div class="bullet"><div>1対1連絡ルームにおけるブロック状態</div></div>
+      <p>連絡ルームのメッセージはエンドツーエンド暗号化され、運営者は通常その本文を閲覧できません。通報時に限り、通報者が画面上で選択し、送信に同意した復号済みコピーが通報者の端末から運営者へ送信されます。選択されていないメッセージおよび暗号鍵は送信されません。通報された内容は通報者から提供された資料であり、運営者がサーバー上の会話全体を復号したものではありません。</p>
+      <div class="spacer"></div>
       <h3>6. Google カレンダー連携に関する情報</h3>
       <div class="spacer"></div>
       <div class="bullet"><div>OAuth 認可状態管理のための一時情報</div></div>
@@ -285,6 +293,7 @@
       <div class="ordered"><div class="marker">4.</div><div>Google カレンダー連携時の OAuth および API 応答</div></div>
       <div class="ordered"><div class="marker">5.</div><div>障害調査のためのアプリ内エラー報告機能</div></div>
       <div class="ordered"><div class="marker">6.</div><div>問い合わせフォーム又は運営者が別途案内するメール連絡先への入力又は送信</div></div>
+      <div class="ordered"><div class="marker">7.</div><div>ユーザーが連絡ルーム内の通報画面で対象メッセージを選択し、復号済みコピーの送信に明示的に同意したうえで送信</div></div>
       <div class="spacer"></div>
       <h2>第3条 利用目的</h2>
       <div class="spacer"></div>
@@ -300,6 +309,7 @@
       <div class="ordered"><div class="marker">8.</div><div>不正利用の防止、セキュリティ維持、障害調査、品質改善のため</div></div>
       <div class="ordered"><div class="marker">9.</div><div>お問い合わせ対応、サポート対応、重要なお知らせの送付のため</div></div>
       <div class="ordered"><div class="marker">10.</div><div>法令遵守又は権利保護のために必要な対応を行うため</div></div>
+      <div class="ordered"><div class="marker">11.</div><div>通報の受付、緊急度判定、事実確認、被害拡大防止、利用制限その他の安全対策を行うため</div></div>
       <div class="spacer"></div>
       <h2>第4条 公開される情報</h2>
       <div class="spacer"></div>
@@ -332,8 +342,9 @@
       <div class="bullet" style="margin-left: 16px;"><div>Supabase 又は Firebase Cloud Messaging を、本サービスの認証、保存、通知配信その他の基盤提供事業者又は委託先として利用する場合</div></div>
       <div class="bullet" style="margin-left: 16px;"><div>Google、LINE 又は Yahoo! JAPAN を、ユーザーが選択する認証又は外部連携機能の提供元として利用する場合</div></div>
       <div class="bullet" style="margin-left: 16px;"><div>OpenAI を、日時解釈及び重複判定補助のための外部処理事業者として利用する場合</div></div>
+      <div class="bullet" style="margin-left: 16px;"><div>Google スプレッドシートを、アクセスを運営担当者に限定した通報受付キューとして利用する場合。この場合、受付番号、通報区分、優先度、期限、関係する識別子、件数および証拠ハッシュを送信します。補足および選択メッセージ本文は、運営者が別途当該送信を有効化しない限り送信しません</div></div>
       <div class="ordered"><div class="marker">4.</div><div>前項の取扱いに関し、運営者は、適用法令に従って、本人同意の取得、委託先又は連携先の適切な選定、契約上の安全管理義務、アクセス制御、不要データの送信抑制その他必要な措置を講じます。</div></div>
-      <div class="ordered"><div class="marker">5.</div><div>外部サービスごとの主な送信先、送信される情報、利用目的、主な所在又は処理地域及び利用場面の整理は、別紙 <code>利用者情報の外部送信について</code> に定めます。外部事業者の処理地域、サブプロセッサ又は提供体制は変更される場合があるため、運営者は、機能追加時又は重要な変更時に当該別紙及び本ポリシーの更新要否を確認します。</div></div>
+      <div class="ordered"><div class="marker">5.</div><div>外部サービスごとの主な送信先、送信される情報、利用目的、主な所在又は処理地域及び利用場面の整理は、別紙 <a href="./external-transmission.html">利用者情報の外部送信について</a> に定めます。外部事業者の処理地域、サブプロセッサ又は提供体制は変更される場合があるため、運営者は、機能追加時又は重要な変更時に当該別紙及び本ポリシーの更新要否を確認します。</div></div>
       <div class="ordered"><div class="marker">6.</div><div>運営者は、法令に基づく場合を除き、ユーザー情報を本ポリシーに定める範囲を超えて第三者提供しません。ただし、本サービスの提供に必要な委託、外部送信又は外部サービス連携を行う場合があります。</div></div>
       <div class="spacer"></div>
       <h2>第7条 保存期間</h2>
@@ -347,6 +358,8 @@
       <div class="bullet" style="margin-left: 16px;"><div>アプリ内通知: 作成時から1年間を目安に保存</div></div>
       <div class="bullet" style="margin-left: 16px;"><div>連絡ルーム及びメッセージ: 連絡機能の提供、履歴表示、不正利用対策及びトラブル対応に必要な期間保存</div></div>
       <div class="bullet" style="margin-left: 16px;"><div>エラーログ: 記録時から180日間を目安に保存</div></div>
+      <div class="bullet" style="margin-left: 16px;"><div>通報時に提供されたメッセージの復号済みコピー、添付プレビュー、補足および通報時の技術情報: 受付時から180日で自動的に削除。ただし、法令上の義務、生命身体への危険、紛争・捜査対応その他具体的な保全理由がある場合は、必要な範囲と期間を記録したうえで削除を延期することがあります</div></div>
+      <div class="bullet" style="margin-left: 16px;"><div>通報の受付番号、区分、受付・対応時刻、証拠のハッシュ値、対応結果および監査記録: 再発防止、措置の一貫性、監査および法令対応に必要な期間、内容資料とは分離して保存</div></div>
       <div class="bullet" style="margin-left: 16px;"><div>利用規約、プライバシーポリシー及び年齢確認に関する同意履歴: 同意取得時点の版管理、法令対応及びトラブル対応のため、アカウント利用継続中保存</div></div>
       <div class="bullet" style="margin-left: 16px;"><div>プロフィール情報、フレンド情報、招待履歴、ブロック設定その他サービスの継続利用に必要な情報: アカウントの利用継続中保存</div></div>
       <div class="bullet" style="margin-left: 16px;"><div>アカウント削除の進捗確認情報: 削除完了から30日。削除完了時にユーザーとの対応関係を切断します。</div></div>
@@ -369,6 +382,7 @@
       <div class="bullet"><div>秘密情報テーブルの分離</div></div>
       <div class="bullet"><div>認証、通知及び外部連携に関するアクセス制御</div></div>
       <div class="bullet"><div>障害調査に必要な範囲に限定したエラーログ保存</div></div>
+      <div class="bullet"><div>通報資料のクライアントからの直接取得、閲覧権限の制限、操作記録、180日後の自動削除および保全例外の記録</div></div>
       <div class="bullet"><div>外部送信先、送信項目及び送信目的の定期確認</div></div>
       <div class="spacer"></div>
       <h2>第9条 ユーザーの選択、開示等の請求手続及び問い合わせ</h2>

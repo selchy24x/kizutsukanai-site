@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>傷つかない招待アプリ 利用者情報の外部送信について</title>
+  <style>
+  :root {
+    color-scheme: light;
+    --bg: #f6efe7;
+    --paper: rgba(255, 255, 255, 0.94);
+    --text: #2f261f;
+    --muted: #70645b;
+    --border: #e3d4c6;
+    --accent: #7a5a43;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Noto Sans JP", "Hiragino Sans", sans-serif;
+    background: linear-gradient(180deg, #fbf7f2 0%, var(--bg) 100%);
+    color: var(--text);
+    line-height: 1.75;
+  }
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 20px 72px;
+  }
+  .shell {
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    padding: 28px 22px;
+    box-shadow: 0 18px 40px rgba(42, 30, 18, 0.08);
+  }
+  .toplink {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 18px;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 14px;
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(28px, 4vw, 38px);
+    line-height: 1.25;
+  }
+  .updated {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .content {
+    margin-top: 28px;
+  }
+  .content h2 {
+    margin: 30px 0 10px;
+    font-size: 20px;
+    line-height: 1.4;
+  }
+  .content h3 {
+    margin: 18px 0 8px;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  .content p,
+  .content .ordered,
+  .content .bullet {
+    margin: 0;
+    font-size: 14.5px;
+  }
+  .content .spacer {
+    height: 14px;
+  }
+  .ordered,
+  .bullet {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    column-gap: 10px;
+    align-items: start;
+  }
+  .bullet::before {
+    content: "•";
+    color: var(--muted);
+    padding-top: 1px;
+  }
+  .ordered .marker {
+    color: var(--text);
+  }
+  a { color: var(--accent); }
+  @media (max-width: 640px) {
+    .shell { padding: 22px 16px; border-radius: 22px; }
+    main { padding: 28px 14px 48px; }
+  }
+  </style>
+</head>
+<body>
+  <main>
+    <article class="shell">
+      <a class="toplink" href="./legal-documents.html">← 一覧へ戻る</a>
+      <h1>傷つかない招待アプリ 利用者情報の外部送信について</h1>
+      <div class="updated">最終更新日: 2026-08-02</div>
+      <section class="content">
+        <p>本書面は、傷つかない招待アプリにおける利用者情報の外部送信について、主な送信先、送信される情報及び利用目的を案内するものです。</p>
+
+        <div class="spacer"></div>
+        <h2>1. 基本方針</h2>
+        <div class="spacer"></div>
+        <p>本サービスでは、認証、データ保存、通知配信、Google カレンダー連携、AI による日時解釈及び重複判定補助その他の機能を提供するため、外部事業者又は外部サービスに対して利用者情報を送信する場合があります。</p>
+        <div class="spacer"></div>
+        <p>外部送信は、次のいずれかに必要な範囲で行います。</p>
+        <div class="spacer"></div>
+        <div class="bullet"><div>本サービスの提供及び維持</div></div>
+        <div class="bullet"><div>セキュリティ確保</div></div>
+        <div class="bullet"><div>障害対応</div></div>
+        <div class="bullet"><div>外部連携機能の実現</div></div>
+        <div class="bullet"><div>通知配信</div></div>
+        <div class="bullet"><div>日時解釈及びカレンダー重複判定補助</div></div>
+        <div class="bullet"><div>不正利用の通報受付および安全対応</div></div>
+        <div class="spacer"></div>
+        <p>本書面における <code>主な所在又は処理地域</code> は、運営者が現時点で把握している当該事業者の主な所在国、提供主体又は処理地域の考え方を示すものです。実際の保存先や処理地域は、利用リージョン、委託先、サブプロセッサその他の事情により変わる場合があります。</p>
+
+        <div class="spacer"></div>
+        <h2>2. 主な外部送信先</h2>
+        <div class="spacer"></div>
+        <h3>Supabase</h3>
+        <div class="bullet"><div>主な所在又は処理地域: 運営者が利用している Supabase の主要データベースリージョンは東京です。ただし、Supabase 又はその委託先の提供体制により、関連情報が日本国外で取り扱われる場合があります</div></div>
+        <div class="bullet"><div>位置付け: 本サービスの認証、データ保存、画像保存及びサーバ処理を支える基盤提供事業者又は委託先</div></div>
+        <div class="bullet"><div>主な用途: 認証、データベース、ストレージ、Edge Functions</div></div>
+        <div class="bullet"><div>主に送信される情報: メールアドレス、認証結果、プロフィール、フレンド、招待、通知、設定に関するデータ、アップロードした画像、エラーログ、通報者が明示的に提供したメッセージの復号済みコピー、添付プレビュー、補足、通報対象および通報処理情報</div></div>
+        <div class="bullet"><div>送信の主なタイミング: ログイン時、アプリ利用時、データ更新時、画像アップロード時、エラー報告時</div></div>
+
+        <div class="spacer"></div>
+        <h3>Google</h3>
+        <div class="bullet"><div>主な所在又は処理地域: 米国その他 Google LLC 又はその関連会社が運用する地域</div></div>
+        <div class="bullet"><div>位置付け: ユーザーが選択する認証及び Google カレンダー連携機能の提供元、ならびにアクセスを運営担当者に限定した通報受付キューの提供元</div></div>
+        <div class="bullet"><div>主な用途: Google ログイン、Google カレンダー連携、Google Calendar API の利用、Google スプレッドシートによる通報受付キュー</div></div>
+        <div class="bullet"><div>主に送信される情報: OAuth 認証に必要な情報、Google カレンダー連携時の認可情報、カレンダーの freebusy 照会に必要な情報、通報の受付番号、区分、優先度、確認期限、通報者・対象者・ルームの識別子、証拠件数およびハッシュ値、運営者が通報メッセージ転送を別途有効化した場合に限る補足および通報者が選択した復号済みメッセージのコピー</div></div>
+        <div class="bullet"><div>送信の主なタイミング: Google ログイン時、Google カレンダー接続時、招待ブロック判定時、アプリ内通報の受付時および送信失敗後の再試行時</div></div>
+        <div class="spacer"></div>
+        <p>通報受付シート上のユーザー識別子、ルーム識別子、補足およびメッセージコピーは、受付から180日で日次処理により消去します。必要最小限の受付番号、区分、件数およびハッシュ値は監査のため残る場合があります。</p>
+
+        <div class="spacer"></div>
+        <h3>LINE</h3>
+        <div class="bullet"><div>主な所在又は処理地域: 日本その他 LINE Yahoo グループが運用する地域</div></div>
+        <div class="bullet"><div>位置付け: ユーザーが選択する認証連携先</div></div>
+        <div class="bullet"><div>主な用途: LINE ログイン</div></div>
+        <div class="bullet"><div>主に送信される情報: OAuth 認証に必要な情報、ログイン結果の照合に必要な情報</div></div>
+        <div class="bullet"><div>送信の主なタイミング: LINE ログイン時</div></div>
+
+        <div class="spacer"></div>
+        <h3>Yahoo! JAPAN</h3>
+        <div class="bullet"><div>主な所在又は処理地域: 日本その他 LINE Yahoo グループが運用する地域</div></div>
+        <div class="bullet"><div>位置付け: ユーザーが選択する認証連携先</div></div>
+        <div class="bullet"><div>主な用途: Yahoo! JAPAN ID ログイン</div></div>
+        <div class="bullet"><div>主に送信される情報: OAuth 認証に必要な情報、ログイン結果の照合に必要な情報</div></div>
+        <div class="bullet"><div>送信の主なタイミング: Yahoo! JAPAN ID ログイン時</div></div>
+
+        <div class="spacer"></div>
+        <h3>Firebase Cloud Messaging</h3>
+        <div class="bullet"><div>主な所在又は処理地域: 米国その他 Google LLC 又はその関連会社が運用する地域</div></div>
+        <div class="bullet"><div>位置付け: Push 通知配信を行う基盤提供事業者又は委託先</div></div>
+        <div class="bullet"><div>主な用途: Push 通知配信</div></div>
+        <div class="bullet"><div>主に送信される情報: Push トークン、通知タイトル、通知本文、通知開封導線に必要なデータ</div></div>
+        <div class="bullet"><div>送信の主なタイミング: 通知許可時、端末登録時、通知送信時</div></div>
+
+        <div class="spacer"></div>
+        <h3>OpenAI</h3>
+        <div class="bullet"><div>主な所在又は処理地域: 米国その他 OpenAI グループ又はその委託先が運用する地域</div></div>
+        <div class="bullet"><div>位置付け: 日時解釈及び重複判定補助を行う外部処理事業者</div></div>
+        <div class="bullet"><div>主な用途: 招待の日時解釈、Google カレンダーとの重複判定補助</div></div>
+        <div class="bullet"><div>主に送信される情報: 招待のタイトル、日時に関する文面、招待の詳細文、重複判定に必要な検索期間、Google freebusy 情報から抽出した重複判定用データ</div></div>
+        <div class="bullet"><div>送信しないことを原則とする情報: ユーザー ID、公開プロフィール ID、フレンド一覧、判定に不要な識別情報</div></div>
+        <div class="bullet"><div>送信の主なタイミング: 招待送信時の日時解釈、カレンダー重複判定時</div></div>
+
+        <div class="spacer"></div>
+        <h2>3. 更新ルール</h2>
+        <div class="spacer"></div>
+        <div class="ordered"><div class="marker">1.</div><div>運営者は、新たな外部送信モジュール、認証手段、通知基盤、AI 処理又は外部連携機能を追加する場合、原則として当該機能の提供開始までに本書面及び関連する法務文書の更新要否を確認します。</div></div>
+        <div class="ordered"><div class="marker">2.</div><div>既存の送信先であっても、送信項目、利用目的、主な所在又は処理地域その他利用者への説明に影響する重要な変更がある場合、本書面の更新を検討します。</div></div>
+        <div class="ordered"><div class="marker">3.</div><div>運営者は、外部事業者の仕様変更、サブプロセッサ変更又はリージョン変更により実態とのずれが生じないよう、必要に応じて各事業者の公表資料及び運営設定を見直します。</div></div>
+
+        <div class="spacer"></div>
+        <h2>4. 補足</h2>
+        <div class="spacer"></div>
+        <div class="ordered"><div class="marker">1.</div><div>外部送信先の一部は、日本国外に所在し、又は日本国外のサーバー若しくはインフラを利用する場合があります。</div></div>
+        <div class="ordered"><div class="marker">2.</div><div>外部送信先、送信項目、送信目的及び主な所在又は処理地域は、本サービスの機能追加、仕様変更、外部事業者の変更その他の事情により更新される場合があります。</div></div>
+        <div class="ordered"><div class="marker">3.</div><div>法令に基づき、運営者は、外国にある第三者への提供又は外国にある事業者への委託に関して、本人同意、契約、監督その他必要な措置を講じます。</div></div>
+        <div class="ordered"><div class="marker">4.</div><div>外部送信に関するお問い合わせは、プライバシーポリシー記載のお問い合わせ窓口で受け付けます。</div></div>
+      </section>
+    </article>
+  </main>
+</body>
+</html>
